@@ -1,0 +1,49 @@
+import React, { useState, useEffect } from "react";
+import { useLocation } from "react-router-dom";
+
+import Marketplace from "./marketPlace";
+import Usernav from "./Usernav";
+import Dashboard from "./Dashboard";
+import Cart from "./Cart";
+import Footer from "../footer";
+
+function Userhome() {
+  const location = useLocation();
+
+  const params = new URLSearchParams(location.search);
+  const tabFromURL = params.get("tab");
+
+
+  const [activeTab, setActiveTab] = useState(tabFromURL || "marketplace");
+
+  useEffect(() => {
+    const params = new URLSearchParams(location.search);
+    const tab = params.get("tab");
+    if (tab) setActiveTab(tab);
+  }, [location]);
+
+  const renderComponent = () => {
+    switch (activeTab) {
+      case "cart":
+        return <Cart />;
+      case "dashboard":
+        return <Dashboard />;
+      case "marketplace":
+        return <Marketplace />;
+      default:
+        return <Marketplace  />;
+    }
+  };
+
+  return (
+    <>
+      <div className="min-h-screen flex flex-col">
+        <Usernav setActiveTab={setActiveTab} />
+        <div className="p-2">{renderComponent()}</div>
+        <Footer />
+      </div>
+    </>
+  );
+}
+
+export default Userhome;
